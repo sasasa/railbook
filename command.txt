@@ -1,0 +1,227 @@
+■Chap01
+●Rubyのバージョン確認
+> ruby -v
+
+●SQLiteのバージョン確認
+> sqlite3 -version
+
+●Devkitインストール
+> ruby dk.rb init
+> ruby dk.rb install
+
+●Node.jsのバージョン確認
+> node -v
+
+●Railsインストール
+> gem install rails
+
+●Railsバージョン確認
+> rails -v
+
+■Chap02
+●新規のアプリケーションを作成
+> rails new railbook
+
+●HTTP サーバを起動
+> rails server
+
+●コントローラクラスの作成
+> rails generate controller hello
+
+●コントローラクラスの削除
+> rails destroy controller hello
+
+●モデルクラスの作成
+> rails generate model book isbn:string title:string price:integer publish:string published:date dl:boolean
+
+●マイグレーションファイルによるテーブルの作成
+> rails db:migrate
+
+●フィクスチャによるテストデータの準備
+> rails db:fixtures:load FIXTURES=books
+
+●データベースクライアントの起動
+> rails dbconsole
+
+●テーブルの一覧を表
+> .tables
+
+●booksテーブルの構造を確認
+> .schema books
+
+●booksテーブルの内容を確認
+> SELECT * FROM books;
+
+●SQLiteクライアントを終了
+> .quit
+
+■Chap03
+●前章で作成したデータベースとモデル、その関連ファイルを削除
+> rails destroy model book
+> rails db:drop DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+
+●Scaffolding機能によるアプリケーション開発
+> rails generate scaffold book isbn:string title:string price:integer publish:string published:date dl:boolean
+
+●マイグレーションファイルを実行
+> rails db:migrate
+
+●自動生成されたルートを確認する
+> rails routes
+
+●作成済みのファイルを削除する
+> rails db:drop:all DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+
+●モデルクラスを作成
+> rails generate migration CreateJoinTableAuthorBook author book
+> rails generate scaffold user username:string password_digest:string email:string dm:boolean roles:string reviews_count:integer
+> rails generate scaffold author user:references name:string birth:date address:text ctype:string photo:binary
+> rails generate scaffold review book:references user:references status:integer body:text
+> rails generate scaffold fan_comment author_no:integer name:string body:text deleted:boolean
+> rails generate model memo memoable:references{polymorphic} body:string --fixture=false
+
+●マイグレーションファイルを実行
+> rails db:migrate
+
+●フィクスチャでテストデータを生成
+> rails db:fixtures:load
+
+●データベースクライアントの起動
+> rails dbconsole
+
+
+●現在のテーブルレイアウト（schema.rb）でデータベースを再作成
+> rails db:reset DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+
+■Chap05
+●Railsコンソールを起動
+> rails console
+
+●書籍データ1件を新規作成
+> book = Book.new(isbn: '978-4-7741-7078-7', title: 'サーブレット＆JSPポケットリファレンス')
+
+●データを保存
+> book.save
+
+●末尾の書籍データを取得
+> new_book = Book.last
+
+●Railsコンソールを終了
+> quit
+
+●SQLiteクライアントからbooksテーブルの内容を確認
+> rails dbconsole
+> SELECT COUNT(*) FROM books;
+
+●Scaffolding機能を利用して、membersテーブルを編集
+> rails generate scaffold member name:string email:string lock_version:integer
+
+●マイグレーションファイルの実行
+> rails db:migrate
+
+●lock_version列がインクリメントされていることを確認
+> SELECT lock_version FROM members WHERE id = 1;
+
+●rails dbconsoleでヘッダーを出力
+> .header ON
+
+●memosテーブルの中身を確認
+> SELECT * FROM memos;
+
+●マイグレーションの実行履歴
+> rails db:migrate:status
+
+●RAILS_ENVオプション
+> rails db:migrate RAILS_ENV=test
+
+●VERBOSEオプション
+> rails db:migrate VERBOSE=false
+
+● スキーマファイルによるデータベースの再構築
+> rails db:schema:load
+
+●データベースを破棄して、最新のスキーマ情報で再構築
+> rails db:reset DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+
+●既存のデータベースからスキーマファイルを生成
+> rails db:schema:dump
+
+●.sqlファイルを作成
+> rails db:structure:dump
+
+●シードファイルの実行
+> rails db:seed
+
+●データベースの作成からスキーマの構築、初期データの投入
+> rails db:setup
+
+●フィクスチャファイルの実行
+> rails db:fixtures:load FIXTURES=users,reviews
+
+■Chap08
+●テストデータベースの構築
+> rails db:migrate RAILS_ENV=test
+
+●テストデータベースの破棄
+> rails db:drop RAILS_ENV=test DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+
+●Unitテストの実行
+> rails test test/models/book_test.rb
+
+●ビューヘルパーのUnitテスト
+> rails test test/helpers/view_helper_test.rb
+
+●Functionalテストの実行
+> rails test test/controllers/hello_controller_test.rb
+
+●Integration テストスクリプトを作成する
+> rails generate integration_test admin_login
+
+●Integrationテストの実行
+> rails test test/integration/admin_login_test.rb
+
+■Chap09
+●production 環境でアセットをプリコンパイル
+> rails assets:precompile RAILS_ENV=production
+
+●CoffeeScriptのコンパイル環境を準備
+> npm install -g coffee-script
+
+●キャッシュを削除
+> rails tmp:cache:clear
+
+■Chap10
+●メーラーの生成
+> rails generate mailer NoticeMailer sendmail_confirm
+
+●メーラーの Unit テスト
+> rails test test/mailers/notice_mailer_test.rb
+
+●Delayed Jobの実行に必要なファイルを作成
+> rails generate delayed_job:active_record
+
+●マイグレーションファイルの実行
+> rails db:migrate
+
+●Sendmailジョブを生成
+> rails generate job Sendmail
+
+●SQLiteクライアントを起動
+> rails dbconsole
+
+●リスト形式で結果を表示するように設定
+> .mode line
+
+●テーブルの内容を表示
+> SELECT * FROM delayed_jobs;
+
+●キューに登録されたジョブを実行
+# ruby bin/delayed_job start  （Linux）
+
+> rails jobs:work  （Windows）
+
+●ジョブのUnitテスト
+> rails test test/jobs/sendmail_job_test.rb
+
+●development環境でキャッシュを有効化
+> rails dev:cache
